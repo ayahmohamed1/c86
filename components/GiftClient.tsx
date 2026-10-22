@@ -4,6 +4,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import Image from 'next/image'
 import confetti from 'canvas-confetti'
 import type { GiftData } from '@/lib/giftData'
+import { defaultLoveLetterParagraphs } from '@/lib/giftData'
 
 interface Props {
   data: GiftData
@@ -15,6 +16,7 @@ export type ScreenType =
   | 'photoStory'
   | 'birthdayMessage'
   | 'bucketList'
+  | 'loveLetter'
   | 'music'
 
 export default function GiftClient({ data }: Props) {
@@ -269,15 +271,27 @@ export default function GiftClient({ data }: Props) {
       >
         <div className="screen-scroll-container">
           <div className="stationery-card birthday-wishes-card">
-            <div className="balloon-showcase-wrapper">
-              <Image
-                src={data.balloonImage || '/images/ballon.png'}
-                alt="Birthday 20 Balloons"
-                width={200}
-                height={260}
-                className="floating-balloon-img"
-                priority
-              />
+            <div className="birthday-hero-duo">
+              <div className="duo-balloon-wrap">
+                <Image
+                  src="/images/ballon.png"
+                  alt="Birthday 20 Balloons"
+                  width={210}
+                  height={270}
+                  className="hero-balloon-img"
+                  priority
+                />
+              </div>
+              <div className="duo-cat-wrap">
+                <Image
+                  src="/images/cat.png"
+                  alt="Birthday Cat with Cake"
+                  width={180}
+                  height={280}
+                  className="hero-cat-img"
+                  priority
+                />
+              </div>
             </div>
 
             <div className="birthday-message-content">
@@ -322,7 +336,67 @@ export default function GiftClient({ data }: Props) {
             </ul>
 
             <div className="card-footer mt-6">
-              <button className="navy-action-btn" onClick={() => navigateTo('music')}>
+              <button
+                className="navy-action-btn"
+                onClick={() => navigateTo('loveLetter')}
+              >
+                <span>the little things... 💌</span>
+                <span className="pulse-arrow">→</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── SCREEN 6: LOVE LETTER (The little things I love about you) ── */}
+      <section
+        className={`screen love-letter-screen ${
+          screen === 'loveLetter' ? 'visible' : 'hidden'
+        }`}
+      >
+        <div className="screen-scroll-container">
+          <div className="stationery-card love-letter-card">
+            <h2 className="handwritten letter-header-title">
+              {data.loveLetterTitle || 'The little things I love about you'}
+            </h2>
+
+            <p className="handwritten letter-salutation">
+              {data.loveLetterSubtitle || 'To My Ameeri, With All My Love <3'}
+            </p>
+
+            <div className="letter-body-paragraphs handwritten">
+              {(data.loveLetterParagraphs || defaultLoveLetterParagraphs).map(
+                (para, idx) => {
+                  const isAccent =
+                    para.startsWith('Happy birthday') ||
+                    para.startsWith('Forever your favorite') ||
+                    para.startsWith("It's not just your birthday") ||
+                    para.startsWith('The person you are') ||
+                    para.startsWith('I love you more than this letter')
+
+                  return (
+                    <p
+                      key={idx}
+                      className={`letter-para ${
+                        isAccent ? 'letter-para-accent' : ''
+                      }`}
+                    >
+                      {para}
+                    </p>
+                  )
+                }
+              )}
+            </div>
+
+            <div className="letter-decor-footer">
+              <span className="letter-heart-divider">✦ ❦ ✦</span>
+            </div>
+
+            <div className="card-footer mt-8">
+              <button
+                className="navy-action-btn"
+                onClick={() => navigateTo('music')}
+              >
                 <span>one more thing... 🎵</span>
                 <span className="pulse-arrow">→</span>
               </button>
