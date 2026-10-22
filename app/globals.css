@@ -101,15 +101,15 @@ html, body {
   overflow-x: hidden;
   -webkit-overflow-scrolling: touch;
   display: block;
-  transition: opacity 0.5s cubic-bezier(0.2, 0.8, 0.2, 1),
-              transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1),
-              visibility 0.5s;
+  transition: opacity 0.4s ease,
+              transform 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .screen.visible {
   opacity: 1;
   transform: scale(1) translateY(0);
   visibility: visible;
+  pointer-events: auto;
   z-index: 10;
 }
 
@@ -117,7 +117,7 @@ html, body {
   opacity: 0;
   transform: scale(0.97) translateY(20px);
   visibility: hidden;
-  pointer-events: none;
+  pointer-events: none !important;
   z-index: 1;
 }
 
@@ -125,6 +125,8 @@ html, body {
   opacity: 0;
   transform: scale(1.03) translateY(-20px);
   visibility: hidden;
+  pointer-events: none !important;
+  z-index: 1;
 }
 
 .screen-scroll-container {
@@ -180,24 +182,34 @@ html, body {
   font-weight: 700;
   cursor: pointer;
   box-shadow: 0 8px 22px rgba(10, 24, 53, 0.35);
-  transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
   text-decoration: none;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
+  -webkit-user-select: none;
+  position: relative;
+  z-index: 20;
 }
 
-.navy-action-btn:hover {
-  transform: translateY(-3px) scale(1.03);
-  background: linear-gradient(135deg, #10244d 0%, #1e3a73 100%);
-  box-shadow: 0 12px 28px rgba(10, 24, 53, 0.45), 0 0 15px rgba(223, 192, 143, 0.3);
+.navy-action-btn * {
+  pointer-events: none;
 }
 
-.pulse-arrow {
-  display: inline-block;
-  font-size: 1.2rem;
-  transition: transform 0.25s ease;
+@media (hover: hover) and (pointer: fine) {
+  .navy-action-btn:hover {
+    transform: translateY(-3px) scale(1.03);
+    background: linear-gradient(135deg, #10244d 0%, #1e3a73 100%);
+    box-shadow: 0 12px 28px rgba(10, 24, 53, 0.45), 0 0 15px rgba(223, 192, 143, 0.3);
+  }
+
+  .navy-action-btn:hover .pulse-arrow {
+    transform: translateX(4px);
+  }
 }
 
-.navy-action-btn:hover .pulse-arrow {
-  transform: translateX(4px);
+.navy-action-btn:active {
+  transform: translateY(1px) scale(0.97);
 }
 
 .navy-badge-tag {

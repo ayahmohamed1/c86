@@ -69,14 +69,35 @@ export default function GiftClient({ data }: Props) {
   }, [data.musicUrl])
 
   const navigateTo = useCallback((newScreen: ScreenType) => {
-    window.history.pushState({ screen: newScreen }, '')
+    try {
+      if (typeof window !== 'undefined' && window.history?.pushState) {
+        window.history.pushState({ screen: newScreen }, '')
+      }
+    } catch {
+      // Safe fallback for restricted webviews
+    }
     setScreen(newScreen)
   }, [])
+
+  // Reset scroll on screen transition
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.scrollTo(0, 0)
+      const activeScreens = document.querySelectorAll('.screen')
+      activeScreens.forEach((el) => {
+        el.scrollTop = 0
+      })
+    }
+  }, [screen])
 
   // History Popstate Handling
   useEffect(() => {
     if (!isMounted) return
-    window.history.replaceState({ screen: 'intro' }, '')
+    try {
+      window.history.replaceState({ screen: 'intro' }, '')
+    } catch {
+      // ignore
+    }
     const handlePopState = (event: PopStateEvent) => {
       if (event.state && event.state.screen) {
         setScreen(event.state.screen)
@@ -219,8 +240,12 @@ export default function GiftClient({ data }: Props) {
             </div>
             <div className="card-footer">
               <button
+                type="button"
                 className="navy-action-btn"
-                onClick={() => navigateTo('photoStory')}
+                onClick={(e) => {
+                  e.preventDefault()
+                  navigateTo('photoStory')
+                }}
               >
                 <span>see attachment</span>
                 <span className="pulse-arrow">→</span>
@@ -252,8 +277,12 @@ export default function GiftClient({ data }: Props) {
             </div>
             <div className="card-footer mt-4">
               <button
+                type="button"
                 className="navy-action-btn"
-                onClick={() => navigateTo('birthdayMessage')}
+                onClick={(e) => {
+                  e.preventDefault()
+                  navigateTo('birthdayMessage')
+                }}
               >
                 <span>birthday message</span>
                 <span className="pulse-arrow">→</span>
@@ -306,8 +335,12 @@ export default function GiftClient({ data }: Props) {
 
             <div className="card-footer mt-4">
               <button
+                type="button"
                 className="navy-action-btn"
-                onClick={() => navigateTo('bucketList')}
+                onClick={(e) => {
+                  e.preventDefault()
+                  navigateTo('bucketList')
+                }}
               >
                 <span>things we wanna do</span>
                 <span className="pulse-arrow">→</span>
@@ -337,8 +370,12 @@ export default function GiftClient({ data }: Props) {
 
             <div className="card-footer mt-6">
               <button
+                type="button"
                 className="navy-action-btn"
-                onClick={() => navigateTo('loveLetter')}
+                onClick={(e) => {
+                  e.preventDefault()
+                  navigateTo('loveLetter')
+                }}
               >
                 <span>the little things... 💌</span>
                 <span className="pulse-arrow">→</span>
@@ -394,8 +431,12 @@ export default function GiftClient({ data }: Props) {
 
             <div className="card-footer mt-8">
               <button
+                type="button"
                 className="navy-action-btn"
-                onClick={() => navigateTo('music')}
+                onClick={(e) => {
+                  e.preventDefault()
+                  navigateTo('music')
+                }}
               >
                 <span>one more thing... 🎵</span>
                 <span className="pulse-arrow">→</span>
